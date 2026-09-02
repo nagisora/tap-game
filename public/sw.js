@@ -1,4 +1,4 @@
-const CACHE = "tap-game-v4";
+const CACHE = "tap-game-v5";
 const PRECACHE = [
   "./",
   "./index.html",

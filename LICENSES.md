@@ -6,27 +6,27 @@ Commercial use of every included file is OK under the license named in its row. 
 
 ## Art
 
-All 12 animal illustrations are **original** images generated for this toy (flat toddler style, thick outline, no character likeness). They are not traces of books, anime, or mascots.
+All 12 animal illustrations are **original compact SVGs** drawn for this toy (flat toddler style, thick outline, no character likeness). They are not traces of books, anime, or mascots. Earlier PNG-in-SVG wrappers (~1MB) were replaced so first load and Service Worker precache stay small on a tablet.
 
-Processing applied to every animal: near-white background flood-fill to alpha, crop with padding, wrap the PNG in an SVG (`<image href="data:image/png;base64,…">`) so the PLAN §7 `.svg` paths work. Transparent PNG copies also sit next to the SVGs. Unprocessed generator output is under `public/assets/art/_generated-source/`.
+Unprocessed raster archive from an earlier generation pass remains under `public/assets/art/_generated-source/` (not shipped to the child UI or precache).
 
 | File | Source | License | Commercial OK | What we changed |
 |---|---|---|---|---|
-| `public/assets/art/farm/cow.svg` and `cow.png` | Original generation | Original work for this repo | yes | background removed, cropped, SVG wrap |
-| `public/assets/art/farm/pig.svg` and `pig.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/farm/chicken.svg` and `chicken.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/farm/sheep.svg` and `sheep.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/yard/dog.svg` and `dog.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/yard/cat.svg` and `cat.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/yard/duck.svg` and `duck.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/yard/frog.svg` and `frog.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/sea/seagull.svg` and `seagull.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/sea/seal.svg` and `seal.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/sea/penguin.svg` and `penguin.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/sea/dolphin.svg` and `dolphin.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/_generated-source/*.png` | Same originals, pre-cut | Original work for this repo | yes | none (archive of generator output) |
-| `public/assets/icons/icon-192.png` | Derived from cow original | Original work for this repo | yes | scaled onto farm-green square |
-| `public/assets/icons/icon-512.png` | Derived from cow original | Original work for this repo | yes | scaled onto farm-green square |
+| `public/assets/art/farm/cow.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/farm/pig.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/farm/chicken.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/farm/sheep.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/yard/dog.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/yard/cat.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/yard/duck.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/yard/frog.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/sea/seagull.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/sea/seal.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/sea/penguin.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/sea/dolphin.svg` | Original vector drawing | Original work for this repo | yes | compact flat SVG |
+| `public/assets/art/_generated-source/*.png` | Earlier raster originals, unused in UI | Original work for this repo | yes | archive only |
+| `public/assets/icons/icon-192.png` | Derived from cow SVG | Original work for this repo | yes | scaled onto farm-green square |
+| `public/assets/icons/icon-512.png` | Derived from cow SVG | Original work for this repo | yes | scaled onto farm-green square |
 
 ## Audio
 

@@ -1,4 +1,4 @@
-import { HIT_PADDING_RATIO, NEXT_MIN_HIT_PX, scenes } from "./data/scenes.js";
+import { HIT_PADDING_RATIO, NEXT_CLEARANCE_PX, NEXT_MIN_HIT_PX, scenes } from "./data/scenes.js";
 
 const stage = document.getElementById("stage");
 const nextButton = document.getElementById("next");
@@ -18,10 +18,16 @@ let loadPromise = null;
 let nextArmedAt = 0;
 let activePointerId = null;
 
-function shortViewport() {
+function viewportSize() {
   const vv = window.visualViewport;
-  const w = vv ? vv.width : window.innerWidth;
-  const h = vv ? vv.height : window.innerHeight;
+  return {
+    w: vv ? vv.width : window.innerWidth,
+    h: vv ? vv.height : window.innerHeight,
+  };
+}
+
+function shortViewport() {
+  const { w, h } = viewportSize();
   return Math.min(w, h);
 }
 
@@ -42,6 +48,62 @@ function inflate(rect, pad) {
 
 function pointIn(box, x, y) {
   return x >= box.left && x <= box.right && y >= box.top && y <= box.bottom;
+}
+
+function playableBounds() {
+  const { h } = viewportSize();
+  const nextRect = nextButton.getBoundingClientRect();
+  const edge = Math.max(10, 0.025 * shortViewport());
+  return {
+    left: edge,
+    top: edge,
+    right: Math.max(edge + 64, nextRect.left - NEXT_CLEARANCE_PX),
+    bottom: h - edge,
+  };
+}
+
+function animalSizePx(play) {
+  const vmin = shortViewport();
+  const playW = play.right - play.left;
+  const playH = play.bottom - play.top;
+  const colGap = Math.max(28, 0.06 * playW);
+  const rowGap = Math.max(28, 0.06 * playH);
+  const maxFit = Math.min((playW - colGap) / 2, (playH - rowGap) / 2);
+  const target = 0.42 * vmin;
+  return Math.min(Math.max(target, 0.36 * vmin), 0.44 * vmin, maxFit);
+}
+
+function layoutAnimals() {
+  if (!renderedAnimals.length) {
+    return;
+  }
+  const { w, h } = viewportSize();
+  const play = playableBounds();
+  const size = animalSizePx(play);
+  stage.style.setProperty("--animal-size", `${size}px`);
+  const scene = scenes[sceneIndex];
+  renderedAnimals.forEach((item, index) => {
+    const spec = scene.animals[index];
+    item.el.style.width = `${size}px`;
+    const rect = item.el.getBoundingClientRect();
+    const halfW = Math.max(rect.width / 2, size / 2);
+    const halfH = Math.max(rect.height / 2, size / 2);
+    const leftCol = play.left + halfW;
+    const rightCol = play.right - halfW;
+    const topRow = play.top + halfH;
+    const botRow = play.bottom - halfH;
+    const spanX = Math.max(0, rightCol - leftCol);
+    const spanY = Math.max(0, botRow - topRow);
+    const baseX = spec.col === 0 ? leftCol : rightCol;
+    const baseY = spec.row === 0 ? topRow : botRow;
+    const nudgeX = spanX - size >= 48 ? spec.nudgeX || 0 : 0;
+    const cx = baseX + nudgeX * spanX;
+    const cy = baseY + (spec.nudgeY || 0) * spanY;
+    const clampedX = Math.min(Math.max(cx, leftCol), rightCol);
+    const clampedY = Math.min(Math.max(cy, topRow), botRow);
+    item.el.style.left = `${(clampedX / w) * 100}%`;
+    item.el.style.top = `${(clampedY / h) * 100}%`;
+  });
 }
 
 async function ensureAudio() {
@@ -122,6 +184,7 @@ function playAnimal(id) {
 function renderScene() {
   const scene = scenes[sceneIndex];
   stage.replaceChildren();
+  stage.className = `scene-${scene.id}`;
   stage.style.background = scene.background;
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", scene.background);
   document.body.style.background = scene.background;
@@ -131,11 +194,14 @@ function renderScene() {
     el.src = animal.art;
     el.alt = "";
     el.draggable = false;
-    el.style.left = `${animal.x * 100}%`;
-    el.style.top = `${animal.y * 100}%`;
     stage.append(el);
     return { id: animal.id, audio: animal.audio, el };
   });
+  layoutAnimals();
+  const pending = renderedAnimals.map((item) =>
+    item.el.decode ? item.el.decode().catch(() => undefined) : Promise.resolve(),
+  );
+  Promise.all(pending).then(layoutAnimals);
 }
 
 function bounce(el) {
@@ -247,6 +313,19 @@ document.addEventListener(
 nextButton.addEventListener("click", (event) => {
   event.preventDefault();
 });
+window.addEventListener("resize", layoutAnimals);
+window.visualViewport?.addEventListener("resize", layoutAnimals);
+window.addEventListener("orientationchange", () => {
+  requestAnimationFrame(layoutAnimals);
+});
+
+const startScene = new URLSearchParams(location.search).get("scene");
+if (startScene) {
+  const startIndex = scenes.findIndex((scene) => scene.id === startScene);
+  if (startIndex >= 0) {
+    sceneIndex = startIndex;
+  }
+}
 
 renderScene();
 loadBuffers();

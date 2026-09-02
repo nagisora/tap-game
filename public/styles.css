@@ -15,7 +15,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
-  background: #7cb342;
+  background: #9ccc65;
 }
 
 body {
@@ -29,14 +29,54 @@ body {
   overflow: hidden;
 }
 
+#stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#stage.scene-farm {
+  background: #9ccc65;
+}
+
+#stage.scene-farm::after {
+  height: 46%;
+  background: #7cb342;
+  box-shadow: 0 -7px 0 #558b2f;
+}
+
+#stage.scene-yard {
+  background: #d7ee9a;
+}
+
+#stage.scene-yard::after {
+  height: 40%;
+  background: linear-gradient(#8fbc5a 0 14px, #c4a574 14px 100%);
+}
+
+#stage.scene-sea {
+  background: #81d4fa;
+}
+
+#stage.scene-sea::after {
+  height: 48%;
+  background: #29b6f6;
+  box-shadow: inset 0 10px 0 #4fc3f7;
+}
+
 .animal {
   position: absolute;
-  width: min(28vmin, 34vw);
+  width: var(--animal-size, 40vmin);
   height: auto;
   transform: translate(-50%, -50%);
   transform-origin: center center;
   pointer-events: none;
   -webkit-user-drag: none;
+  z-index: 1;
 }
 
 .animal.is-hit {
