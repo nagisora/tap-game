@@ -1,0 +1,83 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  background: #7cb342;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+}
+
+#stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.animal {
+  position: absolute;
+  width: min(28vmin, 34vw);
+  height: auto;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.animal.is-hit {
+  animation: animal-pop 180ms ease-out;
+}
+
+@keyframes animal-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  45% {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+#next {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  width: 88px;
+  height: 88px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.next-triangle {
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin: 18px 12px 18px 24px;
+  background: #fff8e7;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  filter: drop-shadow(0 2px 0 #2a2218);
+}
+
+#next:active .next-triangle {
+  transform: scale(1.06);
+}
