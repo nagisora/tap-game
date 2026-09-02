@@ -57,10 +57,11 @@ body {
 
 #next {
   position: fixed;
-  right: max(12px, env(safe-area-inset-right));
-  bottom: max(16px, env(safe-area-inset-bottom));
-  width: 88px;
-  height: 88px;
+  right: max(4px, env(safe-area-inset-right));
+  top: 50%;
+  transform: translateY(-50%);
+  width: 176px;
+  height: 176px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -70,12 +71,12 @@ body {
 
 .next-triangle {
   display: block;
-  width: 52px;
-  height: 52px;
-  margin: 18px 12px 18px 24px;
+  width: 148px;
+  height: 148px;
+  margin: 14px 6px 14px 22px;
   background: #fff8e7;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
-  filter: drop-shadow(0 2px 0 #2a2218);
+  filter: drop-shadow(0 3px 0 #2a2218);
 }
 
 #next:active .next-triangle {
