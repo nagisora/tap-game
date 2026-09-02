@@ -206,11 +206,9 @@ async function onPointerDown(event) {
   }
   activePointerId = event.pointerId;
   event.preventDefault();
-  await ensureAudio();
   const hit = hitTest(event.clientX, event.clientY);
-  if (hit.type === "animal" && !buffers.has(hit.animal.id)) {
-    await loadBuffers();
-  }
+  await ensureAudio();
+  await loadBuffers();
   switch (hit.type) {
     case "animal":
       bounce(hit.animal.el);
