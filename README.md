@@ -1,8 +1,8 @@
-# どうぶつタップ
+# tap-game
 
-16ヶ月児が Android タブレットで、動物の絵をタップすると鳴き声が鳴るおもちゃです。SaaS ではありません。
+16ヶ月児向けのタブレットおもちゃ。**v1 は動物のみ**（タップ → 鳴き声）。あとから別のタップ遊びを足す。スコアも勝ち負けもない。SaaS ではない。
 
-仕様: [PLAN.md](./PLAN.md)（日本語） / [SUMMARY.md](./SUMMARY.md) / 許諾: [LICENSES.md](./LICENSES.md) / 親のピン留め: [PARENT.md](./PARENT.md)
+仕様: [PLAN.md](./PLAN.md) / 英語要約: [SUMMARY.md](./SUMMARY.md) / 許諾: [LICENSES.md](./LICENSES.md)
 
 ## ローカルで開く
 
@@ -10,6 +10,25 @@
 python3 -m http.server -d public 8765
 ```
 
-`file://` では Service Worker が動きません。ブラウザで `http://127.0.0.1:8765` を開く。
+ブラウザで `http://127.0.0.1:8765`。`file://` では Service Worker が動かない。
 
-公開は Cloudflare Pages の Direct Upload（`npx wrangler pages deploy public`）。Origin / GitHub を Pages の Git に繋がない。
+公開は Cloudflare Pages の Direct Upload（`npx wrangler pages deploy public --project-name=tap-game`）。Git 連携は使わない。
+
+## 親の手順（Android タブレット・子どもに渡す前）
+
+子ども向け設定画面はない。全部 OS 側。
+
+1. **音量** — タブレットの音量を中央より少し下にしてから渡す。アプリ内スライダーはない。
+2. **スリープ** — 設定 → ディスプレイ → スリープを、遊ぶ長さより長くする。できれば充電しながら。
+3. Chrome で HTTPS の URL を一度開き、絵が4体見えるまで待つ。自分で1回タップして鳴ることを確認（初回キャッシュ）。
+4. Chrome 右上 ⋮ → **ホーム画面に追加** / **アプリをインストール**。
+5. Chrome のタブは閉じ、**ホーム画面のアイコンから**開く。アドレスバーが無いこと（`display: standalone`）。
+6. **画面ピン留め（OS）** — Chrome の「タブを固定」ではない。
+   - 設定 → セキュリティ → **アプリのピン留め / 画面のピン留め** を ON
+   - **解除前にロックを要求** も ON
+   - tap-game を前面 → 履歴 → アプリアイコン → ピン留め
+7. 子どもに渡す。
+
+解除（親だけ）: 3ボタンなら戻る＋履歴の同時長押し。ジェスチャなら下から上へスワイプしたまま長押し。そのあと PIN。
+
+失敗しやすい点: タブのまま遊ぶとアドレスバーと戻るが残る。Chrome タブ固定ではホームに逃げられる。手順の全文は [PARENT.md](./PARENT.md)。

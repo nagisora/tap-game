@@ -13,6 +13,8 @@ let audioContext = null;
 const buffers = new Map();
 /** @type {AudioBufferSourceNode | null} */
 let playingSource = null;
+/** @type {Promise<void> | null} */
+let loadPromise = null;
 let nextArmedAt = 0;
 let activePointerId = null;
 
@@ -52,34 +54,39 @@ async function ensureAudio() {
   return audioContext;
 }
 
-async function loadBuffers() {
-  const ctx = audioContext ?? new AudioContext();
-  audioContext = ctx;
-  const jobs = [];
-  for (const scene of scenes) {
-    for (const animal of scene.animals) {
-      if (buffers.has(animal.id)) {
-        continue;
-      }
-      jobs.push(
-        fetch(animal.audio)
-          .then((res) => {
-            if (!res.ok) {
-              throw new Error(animal.audio);
-            }
-            return res.arrayBuffer();
-          })
-          .then((raw) => ctx.decodeAudioData(raw))
-          .then((buf) => {
-            buffers.set(animal.id, buf);
-          })
-          .catch(() => {
-            // miss-equivalent: later tap is silent
-          }),
-      );
-    }
+function loadBuffers() {
+  if (loadPromise) {
+    return loadPromise;
   }
-  await Promise.all(jobs);
+  loadPromise = (async () => {
+    const ctx = await ensureAudio();
+    const jobs = [];
+    for (const scene of scenes) {
+      for (const animal of scene.animals) {
+        if (buffers.has(animal.id)) {
+          continue;
+        }
+        jobs.push(
+          fetch(animal.audio)
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error(animal.audio);
+              }
+              return res.arrayBuffer();
+            })
+            .then((raw) => ctx.decodeAudioData(raw.slice(0)))
+            .then((buf) => {
+              buffers.set(animal.id, buf);
+            })
+            .catch(() => {
+              // miss-equivalent: later tap is silent
+            }),
+        );
+      }
+    }
+    await Promise.all(jobs);
+  })();
+  return loadPromise;
 }
 
 function stopCurrent() {
@@ -200,10 +207,10 @@ async function onPointerDown(event) {
   activePointerId = event.pointerId;
   event.preventDefault();
   await ensureAudio();
-  if (buffers.size === 0) {
+  const hit = hitTest(event.clientX, event.clientY);
+  if (hit.type === "animal" && !buffers.has(hit.animal.id)) {
     await loadBuffers();
   }
-  const hit = hitTest(event.clientX, event.clientY);
   switch (hit.type) {
     case "animal":
       bounce(hit.animal.el);
@@ -232,6 +239,13 @@ document.addEventListener("pointerdown", onPointerDown, { passive: false });
 document.addEventListener("pointerup", onPointerUp);
 document.addEventListener("pointercancel", onPointerUp);
 document.addEventListener("contextmenu", (event) => event.preventDefault());
+document.addEventListener(
+  "touchmove",
+  (event) => {
+    event.preventDefault();
+  },
+  { passive: false },
+);
 nextButton.addEventListener("click", (event) => {
   event.preventDefault();
 });

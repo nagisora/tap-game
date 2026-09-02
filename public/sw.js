@@ -1,4 +1,4 @@
-const CACHE = "animal-tap-v1";
+const CACHE = "tap-game-v1";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -46,7 +46,11 @@ self.addEventListener("activate", (event) => {
     caches
       .keys()
       .then((keys) =>
-        Promise.all(keys.filter((key) => key.startsWith("animal-tap-") && key !== CACHE).map((key) => caches.delete(key))),
+        Promise.all(
+          keys
+            .filter((key) => (key.startsWith("tap-game-") || key.startsWith("animal-tap-")) && key !== CACHE)
+            .map((key) => caches.delete(key)),
+        ),
       )
       .then(() => self.clients.claim()),
   );

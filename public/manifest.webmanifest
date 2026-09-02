@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "どうぶつ",
-  "short_name": "どうぶつ",
+  "name": "tap-game",
+  "short_name": "tap-game",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -9,7 +9,11 @@
     <meta name="theme-color" content="#7CB342" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <title>どうぶつ</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'"
+    />
+    <title>tap-game</title>
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" href="./assets/icons/icon-192.png" />
     <link rel="stylesheet" href="./styles.css" />
