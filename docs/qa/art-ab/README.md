@@ -1,7 +1,7 @@
 # アート軽量化 A/B（WebP）
 
-本番の `scenes.js` / `sw.js` / `public/assets/art/` は未変更。
-幾何 SVG の描き直しはしていない。マスターは透明 sidecar PNG。
+このフォルダは差し替え前の A/B 証拠。本番は以降 native WebP q90（`public/assets/art/`）。幾何 SVG の描き直しはしていない。マスター PNG は `docs/art-source/`。
+表の SVG/PNG パスは A/B 当時の参照（本番からは削除済み）。
 
 表示サイズは現行 CSS `width: min(28vmin, 34vw)`。
 1280×800 では **224 CSS px**。`strips/*-1x.png` がその幅、
