@@ -8,23 +8,23 @@ Commercial use of every included file is OK under the license named in its row. 
 
 All 12 animal illustrations are **original** images generated for this toy (flat toddler style, thick outline, no character likeness). They are not traces of books, anime, or mascots.
 
-Processing applied to every animal: near-white background flood-fill to alpha, crop with padding, wrap the PNG in an SVG (`<image href="data:image/png;base64,…">`) so the PLAN §7 `.svg` paths work. Transparent PNG copies also sit next to the SVGs. Unprocessed generator output is under `public/assets/art/_generated-source/`.
+Processing applied to every animal: near-white background flood-fill to alpha, crop with padding, then native-resolution WebP (q90, alpha). The child app ships those `.webp` files. Re-encode masters (transparent PNG, not the opaque generator output) live in `docs/art-source/` and are not precached.
 
 | File | Source | License | Commercial OK | What we changed |
 |---|---|---|---|---|
-| `public/assets/art/farm/cow.svg` and `cow.png` | Original generation | Original work for this repo | yes | background removed, cropped, SVG wrap |
-| `public/assets/art/farm/pig.svg` and `pig.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/farm/chicken.svg` and `chicken.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/farm/sheep.svg` and `sheep.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/yard/dog.svg` and `dog.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/yard/cat.svg` and `cat.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/yard/duck.svg` and `duck.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/yard/frog.svg` and `frog.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/sea/seagull.svg` and `seagull.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/sea/seal.svg` and `seal.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/sea/penguin.svg` and `penguin.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/sea/dolphin.svg` and `dolphin.png` | Original generation | Original work for this repo | yes | same |
-| `public/assets/art/_generated-source/*.png` | Same originals, pre-cut | Original work for this repo | yes | none (archive of generator output) |
+| `public/assets/art/farm/cow.webp` | Original generation | Original work for this repo | yes | background removed, cropped, WebP q90 |
+| `public/assets/art/farm/pig.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/farm/chicken.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/farm/sheep.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/yard/dog.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/yard/cat.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/yard/duck.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/yard/frog.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/sea/seagull.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/sea/seal.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/sea/penguin.webp` | Original generation | Original work for this repo | yes | same |
+| `public/assets/art/sea/dolphin.webp` | Original generation | Original work for this repo | yes | same |
+| `docs/art-source/{farm,yard,sea}/*.png` | Same originals, cropped transparent PNG | Original work for this repo | yes | background removed, cropped; not shipped |
 | `public/assets/icons/icon-192.png` | Derived from cow original | Original work for this repo | yes | scaled onto farm-green square |
 | `public/assets/icons/icon-512.png` | Derived from cow original | Original work for this repo | yes | scaled onto farm-green square |
 
