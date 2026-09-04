@@ -60,8 +60,9 @@ body {
   right: max(4px, env(safe-area-inset-right));
   top: 50%;
   transform: translateY(-50%);
-  width: 176px;
-  height: 176px;
+  /* Half of .animal width (min(28vmin, 34vw)), clamped for phone vs tablet. */
+  width: clamp(80px, calc(min(28vmin, 34vw) * 0.5), 112px);
+  height: clamp(80px, calc(min(28vmin, 34vw) * 0.5), 112px);
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -74,9 +75,9 @@ body {
 
 .next-triangle {
   display: block;
-  width: 72px;
-  height: 84px;
-  margin: 0 0 0 10px;
+  width: 41%;
+  height: 48%;
+  margin: 0 0 0 6%;
   background: #fff;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }

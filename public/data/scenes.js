@@ -1,5 +1,5 @@
 export const HIT_PADDING_RATIO = 0.06;
-export const NEXT_MIN_HIT_PX = 176;
+export const NEXT_MIN_HIT_PX = 88;
 
 export const scenes = [
   {
