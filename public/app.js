@@ -203,7 +203,7 @@ function goNext() {
   if (now < nextArmedAt) {
     return;
   }
-  nextArmedAt = now + 400;
+  nextArmedAt = now + 150;
   sceneIndex = (sceneIndex + 1) % scenes.length;
   renderScene();
 }
@@ -218,22 +218,22 @@ async function onPointerDown(event) {
   activePointerId = event.pointerId;
   event.preventDefault();
   const hit = hitTest(event.clientX, event.clientY);
-  await ensureAudio();
-  const scene = scenes[sceneIndex];
   switch (hit.type) {
-    case "animal":
+    case "next": {
+      goNext();
+      const nextScene = scenes[sceneIndex];
+      void loadSceneAudio(nextScene).then(() => preloadOtherScenes(nextScene));
+      break;
+    }
+    case "animal": {
+      await ensureAudio();
       bounce(hit.animal.el);
       await decodeAnimal(hit.animal);
       playAnimal(hit.animal.id);
+      const scene = scenes[sceneIndex];
       void loadSceneAudio(scene).then(() => preloadOtherScenes(scene));
       break;
-    case "next":
-      goNext();
-      {
-        const nextScene = scenes[sceneIndex];
-        void loadSceneAudio(nextScene).then(() => preloadOtherScenes(nextScene));
-      }
-      break;
+    }
     case "miss":
       break;
     default: {
