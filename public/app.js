@@ -11,10 +11,10 @@ let renderedAnimals = [];
 let audioContext = null;
 /** @type {Map<string, AudioBuffer>} */
 const buffers = new Map();
+/** @type {Map<string, Promise<AudioBuffer | null>>} */
+const decodeJobs = new Map();
 /** @type {AudioBufferSourceNode | null} */
 let playingSource = null;
-/** @type {Promise<void> | null} */
-let loadPromise = null;
 let nextArmedAt = 0;
 let activePointerId = null;
 
@@ -54,39 +54,50 @@ async function ensureAudio() {
   return audioContext;
 }
 
-function loadBuffers() {
-  if (loadPromise) {
-    return loadPromise;
+function decodeAnimal(animal) {
+  const existing = decodeJobs.get(animal.id);
+  if (existing) {
+    return existing;
   }
-  loadPromise = (async () => {
-    const ctx = await ensureAudio();
-    const jobs = [];
-    for (const scene of scenes) {
-      for (const animal of scene.animals) {
-        if (buffers.has(animal.id)) {
-          continue;
-        }
-        jobs.push(
-          fetch(animal.audio)
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error(animal.audio);
-              }
-              return res.arrayBuffer();
-            })
-            .then((raw) => ctx.decodeAudioData(raw.slice(0)))
-            .then((buf) => {
-              buffers.set(animal.id, buf);
-            })
-            .catch(() => {
-              // miss-equivalent: later tap is silent
-            }),
-        );
+  const job = (async () => {
+    try {
+      const ctx = await ensureAudio();
+      const res = await fetch(animal.audio);
+      if (!res.ok) {
+        throw new Error(animal.audio);
       }
+      const raw = await res.arrayBuffer();
+      const buf = await ctx.decodeAudioData(raw.slice(0));
+      buffers.set(animal.id, buf);
+      return buf;
+    } catch {
+      return null;
     }
-    await Promise.all(jobs);
   })();
-  return loadPromise;
+  decodeJobs.set(animal.id, job);
+  return job;
+}
+
+function loadSceneAudio(scene) {
+  return Promise.all(scene.animals.map(decodeAnimal));
+}
+
+function preloadOtherScenes(currentScene) {
+  for (const scene of scenes) {
+    if (scene.id === currentScene.id) {
+      continue;
+    }
+    for (const animal of scene.animals) {
+      void decodeAnimal(animal);
+    }
+  }
+}
+
+function startAudioPreload() {
+  const scene = scenes[sceneIndex];
+  void loadSceneAudio(scene).then(() => {
+    preloadOtherScenes(scene);
+  });
 }
 
 function stopCurrent() {
@@ -208,14 +219,20 @@ async function onPointerDown(event) {
   event.preventDefault();
   const hit = hitTest(event.clientX, event.clientY);
   await ensureAudio();
-  await loadBuffers();
+  const scene = scenes[sceneIndex];
   switch (hit.type) {
     case "animal":
       bounce(hit.animal.el);
+      await decodeAnimal(hit.animal);
       playAnimal(hit.animal.id);
+      void loadSceneAudio(scene).then(() => preloadOtherScenes(scene));
       break;
     case "next":
       goNext();
+      {
+        const nextScene = scenes[sceneIndex];
+        void loadSceneAudio(nextScene).then(() => preloadOtherScenes(nextScene));
+      }
       break;
     case "miss":
       break;
@@ -249,7 +266,7 @@ nextButton.addEventListener("click", (event) => {
 });
 
 renderScene();
-loadBuffers();
+startAudioPreload();
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js");

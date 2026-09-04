@@ -60,25 +60,28 @@ body {
   right: max(4px, env(safe-area-inset-right));
   top: 50%;
   transform: translateY(-50%);
-  width: 176px;
-  height: 176px;
+  /* .animal 幅 min(28vmin, 34vw) の半分。電話〜タブレットで clamp */
+  width: clamp(80px, calc(min(28vmin, 34vw) * 0.5), 112px);
+  height: clamp(80px, calc(min(28vmin, 34vw) * 0.5), 112px);
   padding: 0;
   border: 0;
-  background: transparent;
+  border-radius: 50%;
+  background: #2a2218;
+  display: grid;
+  place-items: center;
   z-index: 2;
   -webkit-tap-highlight-color: transparent;
 }
 
 .next-triangle {
   display: block;
-  width: 148px;
-  height: 148px;
-  margin: 14px 6px 14px 22px;
-  background: #fff8e7;
+  width: 41%;
+  height: 48%;
+  margin: 0 0 0 6%;
+  background: #fff;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
-  filter: drop-shadow(0 3px 0 #2a2218);
 }
 
-#next:active .next-triangle {
-  transform: scale(1.06);
+#next:active {
+  transform: translateY(-50%) scale(1.06);
 }
