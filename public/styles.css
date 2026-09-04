@@ -60,7 +60,7 @@ body {
   right: max(4px, env(safe-area-inset-right));
   top: 50%;
   transform: translateY(-50%);
-  /* Half of .animal width (min(28vmin, 34vw)), clamped for phone vs tablet. */
+  /* .animal 幅 min(28vmin, 34vw) の半分。電話〜タブレットで clamp */
   width: clamp(80px, calc(min(28vmin, 34vw) * 0.5), 112px);
   height: clamp(80px, calc(min(28vmin, 34vw) * 0.5), 112px);
   padding: 0;
