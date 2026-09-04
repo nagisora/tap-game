@@ -203,7 +203,7 @@ function goNext() {
   if (now < nextArmedAt) {
     return;
   }
-  nextArmedAt = now + 400;
+  nextArmedAt = now + 150;
   sceneIndex = (sceneIndex + 1) % scenes.length;
   renderScene();
 }
