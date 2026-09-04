@@ -64,21 +64,23 @@ body {
   height: 176px;
   padding: 0;
   border: 0;
-  background: transparent;
+  border-radius: 50%;
+  background: #2a2218;
+  display: grid;
+  place-items: center;
   z-index: 2;
   -webkit-tap-highlight-color: transparent;
 }
 
 .next-triangle {
   display: block;
-  width: 148px;
-  height: 148px;
-  margin: 14px 6px 14px 22px;
-  background: #fff8e7;
+  width: 72px;
+  height: 84px;
+  margin: 0 0 0 10px;
+  background: #fff;
   clip-path: polygon(0 0, 100% 50%, 0 100%);
-  filter: drop-shadow(0 3px 0 #2a2218);
 }
 
-#next:active .next-triangle {
-  transform: scale(1.06);
+#next:active {
+  transform: translateY(-50%) scale(1.06);
 }
